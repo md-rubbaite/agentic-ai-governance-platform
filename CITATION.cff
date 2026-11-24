@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Agentic AI Governance Platform"
+abstract: "A governance control plane for autonomous AI agents: policy enforcement, risk scoring, human approval gates, kill switch and a tamper-evident audit log."
+authors:
+  - family-names: "Hassain"
+    given-names: "Rubbaite T."
+version: 1.0.0
+date-released: 2026-11-24
+license: MIT
+repository-code: "https://github.com/md-rubbaite/agentic-ai-governance-platform"
+keywords: [ai-governance, ai-agents, human-in-the-loop, policy-engine, audit-log, eu-ai-act]

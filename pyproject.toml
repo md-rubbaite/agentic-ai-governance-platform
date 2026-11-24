@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=84.2.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentgov"
+version = "1.0.0"
+description = "Governance control plane for autonomous AI agents: policy enforcement, risk scoring, human approval gates, kill switch and a tamper-evident audit log."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Rubbaite T. Hassain" }]
+keywords = ["ai-governance", "ai-agents", "policy-engine", "human-in-the-loop", "audit-log", "eu-ai-act"]
+dependencies = [
+    "fastapi>=0.165.0,<1",
+    "uvicorn>=0.54.0,<1",
+    "httpx>=0.28.1,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=9.1.1", "ruff>=0.17.5"]
+
+[project.scripts]
+agentgov = "agentgov.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+agentgov = ["default_policy.toml", "dashboard/index.html"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 140
+target-version = "py311"
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+# B008: FastAPI dependencies are declared as default arguments by design
+ignore = ["B008"]

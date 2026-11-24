@@ -1,0 +1,103 @@
+# Reference policy for the agentic-ai-governance-platform.
+# Rules are evaluated top to bottom; the first rule whose conditions all hold decides.
+# Anything that matches no rule is denied (default_effect = "deny").
+#
+# Hard stops that no policy can override are enforced in code before this file is read:
+# suspended agents, tools outside the agent's allow-list and exhausted daily budgets.
+
+version = "2026-11-24.1"
+default_effect = "deny"
+
+# --- 1. Never let credentials leave through a tool call ---------------------------------
+[[rules]]
+id = "deny-secrets-in-arguments"
+description = "Arguments that contain credentials or private keys are blocked outright."
+effect = "deny"
+[rules.when]
+flags_any = ["secret"]
+
+# --- 2. Suspected prompt injection goes to a human --------------------------------------
+[[rules]]
+id = "review-suspected-injection"
+description = "Instruction-like text in tool arguments is held for a reviewer."
+effect = "require_approval"
+approver_role = "reviewer"
+approvals = 1
+expires_minutes = 30
+[rules.when]
+flags_any = ["injection"]
+
+# --- 3. Restricted data is out of bounds for fully autonomous agents --------------------
+[[rules]]
+id = "deny-restricted-data-for-autonomous-agents"
+description = "Autonomous agents may not act on restricted data."
+effect = "deny"
+[rules.when]
+data_classification = ["restricted"]
+autonomy = ["autonomous"]
+
+# --- 4. Permission changes always need an admin -----------------------------------------
+[[rules]]
+id = "admin-approval-for-permission-changes"
+description = "Granting or revoking access is approved by an administrator."
+effect = "require_approval"
+approver_role = "admin"
+approvals = 1
+expires_minutes = 120
+[rules.when]
+action = ["change_permissions"]
+
+# --- 5. Large payments need two reviewers (four-eyes) -----------------------------------
+[[rules]]
+id = "two-reviewers-for-large-payments"
+description = "Payments above 10,000 need two independent approvals."
+effect = "require_approval"
+approver_role = "reviewer"
+approvals = 2
+expires_minutes = 240
+[rules.when]
+action = ["payment"]
+amount_gt = 10000
+
+# --- 6. Other payments above the auto-approval threshold need one reviewer --------------
+[[rules]]
+id = "review-payments-over-1000"
+description = "Payments above 1,000 need one approval."
+effect = "require_approval"
+approver_role = "reviewer"
+approvals = 1
+expires_minutes = 240
+[rules.when]
+action = ["payment"]
+amount_gt = 1000
+
+# --- 7. High-risk actions are always reviewed ------------------------------------------
+[[rules]]
+id = "review-high-and-critical-risk"
+description = "Anything scoring 50 or more is held for a reviewer."
+effect = "require_approval"
+approver_role = "reviewer"
+approvals = 1
+expires_minutes = 60
+[rules.when]
+min_risk = 50
+
+# --- 8. Systems classified as high-risk under the EU AI Act keep a human in the loop ----
+[[rules]]
+id = "human-oversight-for-high-risk-systems"
+description = "Writes and external actions by high-risk AI systems need approval (EU AI Act Art. 14)."
+effect = "require_approval"
+approver_role = "reviewer"
+approvals = 1
+expires_minutes = 60
+[rules.when]
+eu_ai_act_risk = ["high"]
+action = ["write", "delete", "payment", "external_communication", "execute_code"]
+
+# --- 9. Everything else below the threshold may proceed --------------------------------
+[[rules]]
+id = "allow-low-and-medium-risk"
+description = "Remaining actions under a risk score of 50 are allowed and logged."
+effect = "allow"
+[rules.when]
+risk_tier = ["low", "medium"]
