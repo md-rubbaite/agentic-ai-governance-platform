@@ -3,7 +3,7 @@
 # Agentic AI Governance Platform
 
 [![ci](https://github.com/md-rubbaite/agentic-ai-governance-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/md-rubbaite/agentic-ai-governance-platform/actions/workflows/ci.yml)
-![python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-1f2b46)
+![python](https://img.shields.io/badge/python-3.11%20%E2%80%93%203.15-1f2b46)
 ![license](https://img.shields.io/badge/license-MIT-1f2b46)
 
 A governance control plane for autonomous AI agents. Before an agent calls a tool that moves
@@ -167,7 +167,7 @@ The control plane never calls business systems and holds no business credentials
   redaction, risk bands and tiers, audit tamper and deletion detection, migrations, every
   service rule (RBAC, separation of duties, four-eyes, expiry, kill switch, budgets including
   re-check at approval time), the SDK decorator and the CLI.
-- **CI**: Python 3.11–3.13, ruff, pytest, policy validation, the scripted demo (output in the
+- **CI**: Python 3.11–3.15, ruff, pytest, policy validation, the scripted demo (output in the
   job summary), and a container job that builds the image, starts it read-only as a non-root
   user, waits for readiness and verifies the audit chain through the API.
 - All demo data is **synthetic** and labelled as such.
