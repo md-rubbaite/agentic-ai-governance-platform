@@ -194,4 +194,6 @@ See [ROADMAP.md](ROADMAP.md).
 ---
 
 Author: **Rubbaite T. Hassain** ([tanvir.info.bd](https://tanvir.info.bd)) ([LinkedIn](https://www.linkedin.com/in/rubbaite/)) · Founder of Datazo InfoTech · MIT License.
+
+Architecture, requirements and review by Rubbaite T. Hassain; implementation AI-assisted.
 This project provides engineering controls and evidence; it is not legal advice and does not by itself make a system compliant with any regulation.
