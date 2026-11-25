@@ -1,11 +1,11 @@
 # syntax=docker/dockerfile:1
-FROM python:3.13-slim AS build
+FROM python:3.15-slim AS build
 WORKDIR /src
 COPY pyproject.toml README.md ./
 COPY src ./src
 RUN pip wheel --no-cache-dir --wheel-dir /wheels .
 
-FROM python:3.13-slim
+FROM python:3.15-slim
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 AGENTGOV_DB=/data/agentgov.db AGENTGOV_HOST=0.0.0.0 AGENTGOV_PORT=8080
 RUN useradd --system --uid 10001 --home /data agentgov && mkdir -p /data && chown agentgov /data
 COPY --from=build /wheels /wheels
